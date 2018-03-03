@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<schema xmlns = "http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified">
+<element name = "cards">
+  <complexType>
+    <sequence>
+      <element name = "card" minOccurs = "1" maxOccurs = "unbounded">
+        <complexType>
+          <sequence>
+            <element name = "name" type = "string"/>
+            <element name = "profession" type = "string"/>
+            <element name = "number" maxOccurs = "3">
+              <complexType>
+                <simpleContent>
+                  <extension base = "string">
+                    <attribute name = "type">
+                      <simpleType>
+                        <restriction base = "string">
+                          <enumeration value = "work"/>
+                          <enumeration value = "mobile"/>
+                          <enumeration value = "home"/>
+                        </restriction>
+                      </simpleType>
+                    </attribute>
+                    <attribute name = "primary" type = "string" fixed = "primary"/>
+                  </extension>
+                </simpleContent>
+              </complexType>
+            </element>
+            <element name = "email" type = "string"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+</element>
+</schema>
