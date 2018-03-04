@@ -1,19 +1,16 @@
 package stax;
 
+import javanet.staxutils.IndentingXMLStreamWriter;
 import sax.Card;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardStreamStAXParser {
+    private IndentingXMLStreamWriter writer;
     private List<Card> cards;
     private Card card;
 
@@ -29,6 +26,84 @@ public class CardStreamStAXParser {
         readCards(reader);
 
         return cards;
+    }
+
+    public void toXML(List<Card> cards, File fileName) throws FileNotFoundException, XMLStreamException {
+        this.cards = cards;
+        XMLOutputFactory factory = XMLOutputFactory.newInstance();
+        XMLStreamWriter w = factory.createXMLStreamWriter(new FileOutputStream(fileName));
+        writer = new IndentingXMLStreamWriter(w);
+        writeCards();
+        writer.flush();
+        writer.close();
+    }
+
+    private void writeCards() throws XMLStreamException {
+        writer.writeStartDocument();
+        writer.writeStartElement("cards");
+
+        for (Card card : cards) {
+            writer.writeStartElement("card");
+
+            writeElement("name", card.getName());
+            writeElement("profession", card.getProfession());
+            writeElement("email", card.getEmail());
+            writeNumbers(card);
+            writeElement("email", card.getEmail());
+
+            writer.writeEndElement();
+        }
+
+        writer.writeEndElement();
+        writer.writeEndDocument();
+    }
+
+    private void writeElement(String name, String data) throws XMLStreamException {
+        writer.writeStartElement(name);
+        writer.writeCharacters(data);
+        writer.writeEndElement();
+
+    }
+
+    private void writeNumbers(Card card) throws XMLStreamException {
+        boolean primary = false;
+        String data;
+        if (card.getWorkNumber() != null) {
+            if (card.getWorkNumber().contains("(primary)")) {
+                primary = true;
+                data = (card.getWorkNumber().replace(" (primary)", ""));
+            } else
+                data = card.getWorkNumber();
+            writeNumber(data, "work", primary);
+            primary = false;
+        }
+        if (card.getHomeNumber() != null) {
+            if (card.getHomeNumber().contains("(primary)")) {
+                primary = true;
+                data = (card.getHomeNumber().replace(" (primary)", ""));
+            } else
+                data = card.getHomeNumber();
+            writeNumber(data, "home", primary);
+            primary = false;
+        }
+        if (card.getMobileNumber() != null) {
+            if (card.getMobileNumber().contains("(primary)")) {
+                primary = true;
+                data = (card.getMobileNumber().replace(" (primary)", ""));
+            } else
+                data = card.getMobileNumber();
+            writeNumber(data, "mobile", primary);
+        }
+    }
+
+    private void writeNumber(String data, String type, boolean primary) throws XMLStreamException {
+        writer.writeStartElement("number");
+        writer.writeAttribute("type", type);
+        if (primary)
+            writer.writeAttribute("primary", "primary");
+        writer.writeCharacters(data);
+        writer.writeEndElement();
+
     }
 
     private void readCards(XMLStreamReader reader) throws XMLStreamException {

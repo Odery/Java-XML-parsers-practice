@@ -9,11 +9,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        CardEventStAXParser parser = new CardEventStAXParser();
+        CardStreamStAXParser parser = new CardStreamStAXParser();
         try {
             List<Card> cards = parser.readXML(new File("BusinessCard.xml"));
-            for (Card card : cards)
-                card.show();
+            parser.toXML(cards, new File("myStAX.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             e.printStackTrace();
         }

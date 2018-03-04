@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//This Parser have no write methods because they pretty the same
 public class CardEventStAXParser {
     private List<Card> cards;
     private Card card;
