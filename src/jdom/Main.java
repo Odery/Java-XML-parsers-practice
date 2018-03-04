@@ -12,8 +12,7 @@ public class Main {
         JDOMCardParser parser = new JDOMCardParser();
         try {
             List<Card> cards = parser.readXML(new File("BusinessCard.xml"));
-            for (Card card : cards)
-                card.show();
+            parser.toXML(cards, "myJDOM.xml");
         } catch (JDOMException | IOException e) {
             e.printStackTrace();
         }
