@@ -1,20 +1,20 @@
-package jaxb;
+package simple;
 
-import javax.xml.bind.annotation.*;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
-@XmlRootElement(name = "number")
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(name = "number")
 public class Number {
-    @XmlValue
+    @Text
     private String number;
-    @XmlAttribute
+    @Attribute
     private String type;
-    @XmlAttribute
+    @Attribute(required = false)
     private String primary;
 
     public Number() {
     }
-
 
     public void show() {
         System.out.println(type + " number: " + number + " primary: " + primary);
